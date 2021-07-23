@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"> 
+<h:head lang="es">
+	<title>Práctica 4</title>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+</h:head>
+<h:body class="container-fluid">
+	<div class="row bg-dark" style="height: 80px;">
+		<div class="col-8 align-self-center">
+			<h1 class="text-light">Practica 04 - Tienda web + Servicios REST</h1>
+		</div>
+		<div class="col-4 align-self-center">
+			<a class="btn btn-secondary float-right" href="index.xhtml">
+				Página principal
+			</a>
+		</div>
+	</div>
+	<div class="row justify-content-center my-5">
+		<div class="col">
+			<h:form class="form-group mx-auto w-25 bg-dark px-3 pt-1 pb-1 rounded">
+				<div class="row justify-content-center my-3 mx-auto">
+					<h:messages id="mensajes" class="alert alert-danger text-center" role="alert"/>
+					<h:inputText id="correo" class="form-control my-2 text-center" 
+						value="#{controladorSesion.correo}" 
+						pt:placeholder="Correo electrónico" maxlength="50">
+						<f:validateRequired/>
+					</h:inputText>
+					<h:inputSecret id="contrasenia" class="form-control my-2 text-center"
+						value="#{controladorSesion.contrasenia}"
+						pt:placeholder="Contraseña" maxlength="20">
+						<f:validateLength minimun="5"/>
+						<f:validateRequired/>
+					</h:inputSecret>
+					<h:commandButton class="btn btn-primary mt-2"
+						actionListener="#{controladorSesion.iniciarSesion()}" 
+						value="Ingresar" update="mensajes">
+					</h:commandButton>
+				</div>
+			</h:form>
+		</div>
+	</div> 
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</h:body> 
+</html>

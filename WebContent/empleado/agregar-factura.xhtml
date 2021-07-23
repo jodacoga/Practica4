@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"> 
+<h:head lang="es">
+	<title>Práctica 4</title>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+</h:head>
+<h:body class="container-fluid">
+	<h:form>
+		<div class="row bg-dark" style="height: 80px;">
+			<div class="col-8 align-self-center">
+				<h1 class="text-light">#{controladorSesion.usuario.toString()}</h1>
+			</div>
+			<div class="col-4 align-self-center">
+				<h:commandLink class="btn btn-secondary float-right"
+					actionListener="#{controladorSesion.cerrarSesion()}"
+					value="Cerrar sesión"/>
+				<a class="btn btn-secondary float-right mx-2"
+					href="consulta-clientes.xhtml">
+					Clientes
+				</a>
+				<a class="btn btn-secondary float-right"
+					href="consulta-facturas.xhtml">
+					Facturas
+				</a>
+			</div>
+		</div>
+	</h:form>
+	<div class="row justify-content-center my-5 bg-dark mx-3">
+		<div class="col">
+			<div class="row justify-content-center mx-auto mt-3 mb-2">
+				<div class="col">
+					<h1 class="text-center text-light">Nueva factura</h1>
+					<h:form>
+						<h:messages id="mensajes" class="alert alert-info text-center" role="alert"/>
+					</h:form>
+				</div>
+			</div>
+			<div class="row justify-content-center mx-auto">
+				<div class="col">
+					<h:form id="formulario-cliente" class="form-group mx-auto w-75 px-3 pt-1 pb-1 rounded">
+						<h3 class="text-center text-light">Cliente</h3>
+						<div class="row justify-content-center my-3 mx-auto">
+							<h:inputText id="cedula" class="form-control text-center mb-2"
+								value="#{controladorAgregarFactura.cedula}"
+								pt:placeholder="Cédula del cliente"
+								onkeypress="return esNumero(event)"/>
+							<h:inputText id="cliente" class="form-control text-center mb-2"
+								value="#{controladorAgregarFactura.factura.cliente.toString()}"
+								pt:placeholder="Cliente" readonly="true"/>
+							<h:inputText id="direccion" class="form-control text-center mb-2"
+								value="#{controladorAgregarFactura.factura.cliente.direccion}"
+								pt:placeholder="Dirección" readonly="true"/>
+							<h:inputText id="telefono" class="form-control text-center mb-2"
+								value="#{controladorAgregarFactura.factura.cliente.telefono}"
+								pt:placeholder="Teléfono" readonly="true"/>
+							<h:commandButton class="btn btn-primary"
+								actionListener="#{controladorAgregarFactura.buscarCliente()}" 
+								value="Buscar cliente" update="mensajes clientes direccion telefono"/>
+						</div>
+					</h:form>
+				</div>
+				<div class="col">
+					<h:form id="formulario-producto" class="form-group mx-auto w-75 px-3 pt-1 pb-1 rounded">
+						<h3 class="text-center text-light">Productos</h3>
+						<div class="row justify-content-center my-3 mx-auto">
+							<h:selectOneMenu class="form-control text-center mb-2"
+								value="#{controladorAgregarFactura.productoID}">
+								<f:selectItems value="#{controladorAgregarFactura.existencias}" var="existencia"
+									itemValue="#{existencia.producto.id}" itemLabel="#{existencia.producto.descripcion}"/>
+							</h:selectOneMenu>
+							<h:inputText id="cantidad" class="form-control text-center mb-2"
+								value="#{controladorAgregarFactura.cantidad}"
+								pt:placeholder="Cantidad" onkeypress="return esNumero(event)"/>
+							<h:commandButton class="btn btn-primary mb-2"
+								actionListener="#{controladorAgregarFactura.agregarProducto()}" 
+								value="Agregar produto" update="mensajes subtotal total detalles"/>
+							<h:inputText id="subtotal" class="form-control text-center mb-2"
+								value="#{controladorAgregarFactura.factura.subtotal}"
+								pt:placeholder="Subtotal" readonly="true"/>
+							<h:inputText id="total" class="form-control text-center mb"
+								value="#{controladorAgregarFactura.factura.total}"
+								pt:placeholder="Total (IVA incluido)" readonly="true"/>
+						</div>
+					</h:form>
+				</div>
+			</div>
+			<div class="row justify-content-center mx-auto my-3">
+				<div class="col">
+					<h:form>
+						<h:dataTable id="detalles" class="table table-striped"
+							value="#{controladorAgregarFactura.factura.detalles}" var="detalle">
+							<h:column class="text-center text-light" headerClass="bg-light text-center">
+								<f:facet name="header">Producto</f:facet>
+								#{detalle.producto.descripcion}
+							</h:column>
+							<h:column class="text-center text-light" headerClass="bg-light text-center">
+								<f:facet name="header">Cantidad</f:facet>
+								#{detalle.cantidad}
+							</h:column>
+							<h:column class="text-center text-light" headerClass="bg-light text-center">
+								<f:facet name="header">Subtotal</f:facet>
+								#{detalle.calcularSubtotal()}
+							</h:column>
+							<h:column class="text-center text-light" headerClass="bg-light text-center">
+								<f:facet name="header">
+									<h:commandButton class="btn btn-primary"
+										actionListener="#{controladorAgregarFactura.guardar()}" 
+										value="Generar" update="formulario-cliente formulario-producto detalles mensaje"/>
+								</f:facet>
+									<h:commandButton class="btn btn-danger"
+										actionListener="#{controladorAgregarFactura.quitarProducto(detalle)}" 
+										value="Quitar" update="subtotal total detalles"/>
+							</h:column>
+						</h:dataTable>
+					</h:form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="../js/extra.js">
+	</script> 
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</h:body> 
+</html>
